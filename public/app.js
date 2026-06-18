@@ -81,9 +81,11 @@ function renderPlayerChart(team, playerStats) {
       label: name,
       data,
       borderColor: COLORS[i % COLORS.length],
-      backgroundColor: COLORS[i % COLORS.length] + '33',
+      backgroundColor: COLORS[i % COLORS.length] + '22',
+      borderWidth: 1.5,
       tension: 0.3,
-      pointRadius: 3,
+      pointRadius: 0,
+      pointHoverRadius: 4,
       spanGaps: true
     };
   });
@@ -112,9 +114,11 @@ function renderTeamChart(teamStats) {
       return d ? d.value : null;
     }),
     borderColor: COLORS[i % COLORS.length],
-    backgroundColor: COLORS[i % COLORS.length] + '33',
-    tension: 0.3,
-    pointRadius: 3,
+    backgroundColor: COLORS[i % COLORS.length] + '22',
+    borderWidth: 2,
+    tension: 0.4,
+    pointRadius: 2,
+    pointHoverRadius: 5,
     spanGaps: true
   }));
 
@@ -132,7 +136,18 @@ function chartOptions(unit) {
     maintainAspectRatio: false,
     interaction: { mode: 'index', intersect: false },
     plugins: {
-      legend: { labels: { color: '#e8f5ee', font: { size: 10 } } },
+      legend: {
+        position: 'bottom',
+        labels: {
+          color: '#e8f5ee',
+          font: { size: 10 },
+          boxWidth: 12,
+          boxHeight: 2,
+          padding: 8,
+          usePointStyle: true,
+          pointStyle: 'line'
+        }
+      },
       tooltip: {
         callbacks: {
           label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(1)}${unit}`
@@ -141,7 +156,7 @@ function chartOptions(unit) {
     },
     scales: {
       x: {
-        ticks: { color: '#7fad8f', maxTicksLimit: 8, font: { size: 9 } },
+        ticks: { color: '#7fad8f', maxTicksLimit: 6, font: { size: 9 }, maxRotation: 45 },
         grid: { color: '#1e3828' }
       },
       y: {
@@ -156,7 +171,7 @@ function chartOptions(unit) {
 function renderTeamRanking(teamStats) {
   const sorted = [...teamStats].sort((a, b) => b.total - a.total);
   const el = document.getElementById('team-ranking');
-  el.innerHTML = sorted.map((team, i) => {
+  const items = sorted.map((team, i) => {
     const rank = i + 1;
     const rankClass = rank <= 3 ? `rank-${rank}` : '';
     const scoreClass = team.total >= 0 ? '' : 'negative';
@@ -172,21 +187,35 @@ function renderTeamRanking(teamStats) {
         </div>`;
     }).join('');
 
+    const playersId = `players-${team.id}`;
     return `
       <div class="team-rank-item ${rankClass}">
         <div class="rank-badge">${rank}</div>
         <div class="team-rank-info">
-          <div class="team-rank-header">
+          <button class="team-players-toggle" data-target="${playersId}">
             <div class="team-name-block">
               <span class="team-name">${team.name}</span>
               <span class="team-owner">${team.owner ?? ''}</span>
             </div>
-            <span class="team-score ${scoreClass}">${team.total >= 0 ? '+' : ''}${team.total.toFixed(1)}pt</span>
-          </div>
-          <div class="players-row">${playersHtml}</div>
+            <div class="team-header-right">
+              <span class="team-score ${scoreClass}">${team.total >= 0 ? '+' : ''}${team.total.toFixed(1)}pt</span>
+              <span class="team-toggle-icon">▼</span>
+            </div>
+          </button>
+          <div id="${playersId}" class="players-row collapsed">${playersHtml}</div>
         </div>
       </div>`;
   }).join('');
+  el.innerHTML = items;
+
+  el.querySelectorAll('.team-players-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const row = document.getElementById(btn.dataset.target);
+      const icon = btn.querySelector('.team-toggle-icon');
+      row.classList.toggle('collapsed');
+      icon.classList.toggle('open');
+    });
+  });
 }
 
 // ===== アワード描画 =====
@@ -233,7 +262,7 @@ function renderAwardBlock(id, players, key, fmt) {
 }
 
 // ===== 役満描画 =====
-function renderYakuman(yakumanData, draftTeams) {
+function renderYakuman(yakumanData, draftTeams, playerStats) {
   const playerTeamMap = {};
   for (const team of draftTeams) {
     for (const name of team.players) {
@@ -250,18 +279,24 @@ function renderYakuman(yakumanData, draftTeams) {
   const sorted = [...list].sort((a, b) => b.date.localeCompare(a.date));
   el.innerHTML = sorted.map(y => {
     const info = playerTeamMap[y.player];
-    const metaHtml = info
-      ? `<div class="yakuman-meta"><span>${info.teamName}</span><span>${info.owner}</span></div>`
-      : '';
+    const imgSrc = playerStats[y.player]?.image ?? null;
+    const imgHtml = imgSrc
+      ? `<img src="${imgSrc}" alt="${y.player}" class="yakuman-photo">`
+      : `<div class="yakuman-photo yakuman-photo--placeholder">👤</div>`;
     return `
       <div class="yakuman-item">
-        <div class="yakuman-top">
-          <span class="yakuman-date">${y.date}</span>
-          <span class="yakuman-player">${y.player}</span>
-          <span class="yakuman-yaku">${y.yaku}</span>
-          <span class="yakuman-score">${y.score.toLocaleString()}点</span>
+        ${imgHtml}
+        <div class="yakuman-info">
+          <div class="yakuman-top">
+            <span class="yakuman-player">${y.player}</span>
+            <span class="yakuman-yaku">${y.yaku}</span>
+            <span class="yakuman-score">${y.score.toLocaleString()}点</span>
+          </div>
+          <div class="yakuman-meta">
+            <span class="yakuman-date">${y.date}</span>
+            ${info ? `<span>${info.teamName}</span><span>${info.owner}</span>` : ''}
+          </div>
         </div>
-        ${metaHtml}
       </div>`;
   }).join('');
 }
@@ -281,8 +316,67 @@ function createPlaceholder() {
   return canvas.toDataURL();
 }
 
+// ===== パスワード認証 =====
+// パスワードを変更する場合は下の PASS_HASH を書き換えてください
+// 変更方法: https://emn178.github.io/online-tools/sha256.html でパスワードをSHA-256に変換してここに貼る
+const PASS_HASH = 'c2feba38d6b08d8f1e307589ee37e63d6a0aa4d40276137ea7765450a3970182'; // shibukawa
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function setupPassword() {
+  const overlay = document.getElementById('pw-overlay');
+  const app = document.getElementById('app');
+  const input = document.getElementById('pw-input');
+  const btn = document.getElementById('pw-btn');
+  const error = document.getElementById('pw-error');
+
+  if (sessionStorage.getItem('auth') === 'ok') {
+    overlay.remove();
+    app.removeAttribute('hidden');
+    return true;
+  }
+
+  return new Promise(resolve => {
+    const attempt = async () => {
+      const hash = await sha256(input.value);
+      if (hash === PASS_HASH) {
+        sessionStorage.setItem('auth', 'ok');
+        overlay.remove();
+        app.removeAttribute('hidden');
+        resolve(true);
+      } else {
+        error.textContent = 'パスワードが違います';
+        input.value = '';
+        input.focus();
+      }
+    };
+    btn.addEventListener('click', attempt);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); });
+    input.focus();
+  });
+}
+
+// ===== 折りたたみ =====
+function setupToggles() {
+  document.querySelectorAll('.section-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.dataset.target;
+      const body = document.getElementById(targetId);
+      const icon = btn.querySelector('.toggle-icon');
+      body.classList.toggle('collapsed');
+      icon.classList.toggle('collapsed');
+    });
+  });
+}
+
 // ===== メイン =====
 async function init() {
+  await setupPassword();
+  setupToggles();
+
   const [results, draft, yakuman] = await Promise.all([
     loadJSON('/data/results.json'),
     loadJSON('/data/draft.json'),
@@ -308,7 +402,7 @@ async function init() {
   renderAwards(playerStats, draft.teams);
 
   // 役満
-  renderYakuman(yakuman, draft.teams);
+  renderYakuman(yakuman, draft.teams, playerStats);
 
   // プルダウン生成（選手推移）
   const select = document.getElementById('team-select');
