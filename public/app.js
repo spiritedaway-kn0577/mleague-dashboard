@@ -20,7 +20,7 @@ function buildPlayerStats(matches) {
         stats[p.player] = {
           total: 0, bestScore: -Infinity, tops: 0,
           fourthCount: 0, games: 0, image: p.image || null,
-          history: [] // {date, score, cumulative}
+          history: []
         };
       }
       const s = stats[p.player];
@@ -46,7 +46,6 @@ function buildTeamStats(draftTeams, playerStats) {
     }));
     const total = players.reduce((sum, p) => sum + p.total, 0);
 
-    // 日付ごとの累積ポイント
     const allDates = [...new Set(
       players.flatMap(p => p.history.map(h => h.date))
     )].sort();
@@ -133,9 +132,7 @@ function chartOptions(unit) {
     maintainAspectRatio: false,
     interaction: { mode: 'index', intersect: false },
     plugins: {
-      legend: {
-        labels: { color: '#e8f5ee', font: { size: 11 } }
-      },
+      legend: { labels: { color: '#e8f5ee', font: { size: 10 } } },
       tooltip: {
         callbacks: {
           label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(1)}${unit}`
@@ -144,14 +141,11 @@ function chartOptions(unit) {
     },
     scales: {
       x: {
-        ticks: { color: '#7fad8f', maxTicksLimit: 12, font: { size: 10 } },
+        ticks: { color: '#7fad8f', maxTicksLimit: 8, font: { size: 9 } },
         grid: { color: '#1e3828' }
       },
       y: {
-        ticks: {
-          color: '#7fad8f',
-          callback: v => `${v}pt`
-        },
+        ticks: { color: '#7fad8f', callback: v => `${v}pt`, font: { size: 9 } },
         grid: { color: '#1e3828' }
       }
     }
@@ -159,7 +153,7 @@ function chartOptions(unit) {
 }
 
 // ===== チームランキング描画 =====
-function renderTeamRanking(teamStats, playerStats) {
+function renderTeamRanking(teamStats) {
   const sorted = [...teamStats].sort((a, b) => b.total - a.total);
   const el = document.getElementById('team-ranking');
   el.innerHTML = sorted.map((team, i) => {
@@ -168,12 +162,12 @@ function renderTeamRanking(teamStats, playerStats) {
     const scoreClass = team.total >= 0 ? '' : 'negative';
 
     const playersHtml = team.players.map(p => {
-      const imgSrc = p.image ? `../${p.image}` : 'images/placeholder.png';
+      const imgSrc = p.image ? p.image : 'images/placeholder.png';
       const scoreClass2 = p.total >= 0 ? 'positive' : 'negative';
       return `
         <div class="player-chip">
-          <img src="${imgSrc}" alt="${p.name}" onerror="this.src='images/placeholder.png'">
-          <span>${p.name}</span>
+          <img src="${imgSrc}" alt="${p.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22/>'">
+          <span class="chip-name">${p.name}</span>
           <span class="chip-score ${scoreClass2}">${p.total >= 0 ? '+' : ''}${p.total.toFixed(1)}</span>
         </div>`;
     }).join('');
@@ -183,7 +177,10 @@ function renderTeamRanking(teamStats, playerStats) {
         <div class="rank-badge">${rank}</div>
         <div class="team-rank-info">
           <div class="team-rank-header">
-            <span class="team-name">${team.name}</span>
+            <div class="team-name-block">
+              <span class="team-name">${team.name}</span>
+              <span class="team-owner">${team.owner ?? ''}</span>
+            </div>
             <span class="team-score ${scoreClass}">${team.total >= 0 ? '+' : ''}${team.total.toFixed(1)}pt</span>
           </div>
           <div class="players-row">${playersHtml}</div>
@@ -197,13 +194,14 @@ function renderAwards(playerStats, draftTeams) {
   const playerTeamMap = {};
   for (const team of draftTeams) {
     for (const name of team.players) {
-      playerTeamMap[name] = team.name;
+      playerTeamMap[name] = { teamName: team.name, owner: team.owner ?? '' };
     }
   }
 
   const players = Object.entries(playerStats).map(([name, s]) => ({
     name,
-    team: playerTeamMap[name] ?? '—',
+    teamName: playerTeamMap[name]?.teamName ?? '—',
+    owner: playerTeamMap[name]?.owner ?? '',
     total: s.total,
     bestScore: s.bestScore === -Infinity ? 0 : s.bestScore,
     avoidRate: s.games > 0 ? ((s.games - s.fourthCount) / s.games * 100) : 0,
@@ -220,14 +218,14 @@ function renderAwardBlock(id, players, key, fmt) {
   const sorted = [...players].sort((a, b) => b[key] - a[key]).slice(0, 3);
   const el = document.getElementById(id);
   el.innerHTML = sorted.map((p, i) => {
-    const rankClass = ['r1', 'r2', 'r3'][i];
     const medal = ['🥇', '🥈', '🥉'][i];
     return `
       <div class="award-row">
-        <span class="award-rank ${rankClass}">${medal}</span>
-        <div style="flex:1">
+        <span class="award-rank">${medal}</span>
+        <div class="award-info">
           <div class="award-player">${p.name}</div>
-          <div class="award-team">${p.team}</div>
+          <div class="award-team">${p.teamName}</div>
+          <div class="award-owner">${p.owner}</div>
         </div>
         <span class="award-value">${fmt(p[key])}</span>
       </div>`;
@@ -235,7 +233,14 @@ function renderAwardBlock(id, players, key, fmt) {
 }
 
 // ===== 役満描画 =====
-function renderYakuman(yakumanData) {
+function renderYakuman(yakumanData, draftTeams) {
+  const playerTeamMap = {};
+  for (const team of draftTeams) {
+    for (const name of team.players) {
+      playerTeamMap[name] = { teamName: team.name, owner: team.owner ?? '' };
+    }
+  }
+
   const el = document.getElementById('yakuman-list');
   const list = yakumanData.yakuman ?? [];
   if (list.length === 0) {
@@ -243,13 +248,22 @@ function renderYakuman(yakumanData) {
     return;
   }
   const sorted = [...list].sort((a, b) => b.date.localeCompare(a.date));
-  el.innerHTML = sorted.map(y => `
-    <div class="yakuman-item">
-      <span class="yakuman-date">${y.date}</span>
-      <span class="yakuman-player">${y.player}</span>
-      <span class="yakuman-yaku">${y.yaku}</span>
-      <span class="yakuman-score">${y.score.toLocaleString()}点</span>
-    </div>`).join('');
+  el.innerHTML = sorted.map(y => {
+    const info = playerTeamMap[y.player];
+    const metaHtml = info
+      ? `<div class="yakuman-meta"><span>${info.teamName}</span><span>${info.owner}</span></div>`
+      : '';
+    return `
+      <div class="yakuman-item">
+        <div class="yakuman-top">
+          <span class="yakuman-date">${y.date}</span>
+          <span class="yakuman-player">${y.player}</span>
+          <span class="yakuman-yaku">${y.yaku}</span>
+          <span class="yakuman-score">${y.score.toLocaleString()}点</span>
+        </div>
+        ${metaHtml}
+      </div>`;
+  }).join('');
 }
 
 // ===== プレースホルダー画像生成 =====
@@ -275,22 +289,28 @@ async function init() {
     loadJSON('/data/yakuman.json')
   ]);
 
-  // プレースホルダー設定
   const placeholder = createPlaceholder();
-  document.querySelectorAll('img').forEach(img => {
-    img.addEventListener('error', () => { img.src = placeholder; });
-  });
 
-  // 最終更新日
-  document.getElementById('last-updated').textContent =
-    results.last_updated ? `最終更新: ${results.last_updated}` : '';
-
-  // マッチデータが空の場合はサンプル表示
   const matches = results.matches ?? [];
   const playerStats = buildPlayerStats(matches);
   const teamStats = buildTeamStats(draft.teams, playerStats);
 
-  // プルダウン生成
+  document.getElementById('last-updated').textContent =
+    results.last_updated ? `最終更新: ${results.last_updated}` : '';
+
+  // ランキング
+  renderTeamRanking(teamStats);
+
+  // チーム推移グラフ
+  renderTeamChart(teamStats);
+
+  // アワード
+  renderAwards(playerStats, draft.teams);
+
+  // 役満
+  renderYakuman(yakuman, draft.teams);
+
+  // プルダウン生成（選手推移）
   const select = document.getElementById('team-select');
   draft.teams.forEach((team, i) => {
     const opt = document.createElement('option');
@@ -299,7 +319,6 @@ async function init() {
     select.appendChild(opt);
   });
 
-  // 選手推移グラフ（初期: 1チーム目）
   const updatePlayerChart = () => {
     const idx = parseInt(select.value);
     renderPlayerChart(draft.teams[idx], playerStats);
@@ -307,17 +326,10 @@ async function init() {
   select.addEventListener('change', updatePlayerChart);
   updatePlayerChart();
 
-  // チーム推移グラフ
-  renderTeamChart(teamStats);
-
-  // ランキング
-  renderTeamRanking(teamStats, playerStats);
-
-  // アワード
-  renderAwards(playerStats, draft.teams);
-
-  // 役満
-  renderYakuman(yakuman);
+  // 画像エラー時のフォールバック
+  document.querySelectorAll('img').forEach(img => {
+    img.addEventListener('error', () => { img.src = placeholder; });
+  });
 }
 
 init().catch(console.error);
