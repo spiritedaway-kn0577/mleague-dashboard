@@ -5,70 +5,118 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mリーグ ドラフトダッシュボード</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>🀄 Mリーグ ドラフトダッシュボード</h1>
-    <p id="last-updated"></p>
-  </header>
 
-  <main>
-    <!-- セクション1: チームランキング -->
-    <section class="card">
-      <h2>ドラフトチーム ランキング</h2>
-      <div id="team-ranking"></div>
-    </section>
-
-    <!-- セクション2: 再ドラフトチーム推移グラフ -->
-    <section class="card">
-      <h2>ドラフトチーム 累積ポイント推移</h2>
-      <div class="chart-wrap">
-        <canvas id="team-chart"></canvas>
+  <!-- パスワード画面 -->
+  <div id="pw-overlay">
+    <div id="pw-box">
+      <img src="images/mleague-logo.svg" alt="M.LEAGUE" id="pw-logo">
+      <h2>ドラフトダッシュボード</h2>
+      <p>パスワードを入力してください</p>
+      <div id="pw-input-wrap">
+        <input type="password" id="pw-input" placeholder="パスワード" autocomplete="current-password">
+        <button id="pw-btn">→</button>
       </div>
-    </section>
+      <p id="pw-error"></p>
+    </div>
+  </div>
 
-    <!-- セクション3: アワード -->
-    <section class="card">
-      <h2>🏆 アワード</h2>
-      <div class="awards-grid">
-        <div class="award-block">
-          <h3>個人スコア（累計）TOP3</h3>
-          <div id="award-total"></div>
-        </div>
-        <div class="award-block">
-          <h3>最高スコア TOP3</h3>
-          <div id="award-best"></div>
-        </div>
-        <div class="award-block">
-          <h3>4着回避率 TOP3</h3>
-          <div id="award-avoid"></div>
-        </div>
-        <div class="award-block">
-          <h3>最多トップ TOP3</h3>
-          <div id="award-top"></div>
-        </div>
+  <div id="app" hidden>
+    <header>
+      <div class="header-left">
+        <img src="images/mleague-logo.svg" alt="M.LEAGUE" id="header-logo">
+        <span id="header-title">ドラフトダッシュボード</span>
       </div>
-    </section>
+      <p id="last-updated"></p>
+    </header>
 
-    <!-- セクション4: 役満賞 -->
-    <section class="card">
-      <h2>🎴 役満賞</h2>
-      <div id="yakuman-list"></div>
-    </section>
+    <main>
+      <!-- セクション1: チームランキング -->
+      <section class="card">
+        <button class="section-toggle" data-target="ranking-body">
+          <h2>ドラフトチーム ランキング</h2>
+          <span class="toggle-icon">▲</span>
+        </button>
+        <div id="ranking-body" class="section-body">
+          <div id="team-ranking"></div>
+        </div>
+      </section>
 
-    <!-- セクション5: チーム別選手推移グラフ -->
-    <section class="card">
-      <h2>選手別 累積ポイント推移</h2>
-      <div class="controls">
-        <label for="team-select">チームを選択：</label>
-        <select id="team-select"></select>
-      </div>
-      <div class="chart-wrap">
-        <canvas id="player-chart"></canvas>
-      </div>
-    </section>
-  </main>
+      <!-- セクション2: チーム推移グラフ -->
+      <section class="card">
+        <button class="section-toggle" data-target="team-chart-body">
+          <h2>ドラフトチーム 累積ポイント推移</h2>
+          <span class="toggle-icon">▲</span>
+        </button>
+        <div id="team-chart-body" class="section-body">
+          <div class="chart-wrap">
+            <canvas id="team-chart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- セクション3: アワード -->
+      <section class="card">
+        <button class="section-toggle" data-target="awards-body">
+          <h2>🏆 アワード</h2>
+          <span class="toggle-icon">▲</span>
+        </button>
+        <div id="awards-body" class="section-body">
+          <div class="awards-grid">
+            <div class="award-block">
+              <h3>個人スコア（累計）TOP3</h3>
+              <div id="award-total"></div>
+            </div>
+            <div class="award-block">
+              <h3>最高スコア TOP3</h3>
+              <div id="award-best"></div>
+            </div>
+            <div class="award-block">
+              <h3>4着回避率 TOP3</h3>
+              <div id="award-avoid"></div>
+            </div>
+            <div class="award-block">
+              <h3>最多トップ TOP3</h3>
+              <div id="award-top"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- セクション4: 役満賞 -->
+      <section class="card">
+        <button class="section-toggle" data-target="yakuman-body">
+          <h2>🎴 役満賞</h2>
+          <span class="toggle-icon">▲</span>
+        </button>
+        <div id="yakuman-body" class="section-body">
+          <div id="yakuman-list"></div>
+        </div>
+      </section>
+
+      <!-- セクション5: 選手別推移 -->
+      <section class="card">
+        <button class="section-toggle" data-target="player-chart-body">
+          <h2>選手別 累積ポイント推移</h2>
+          <span class="toggle-icon">▲</span>
+        </button>
+        <div id="player-chart-body" class="section-body">
+          <div class="controls">
+            <label for="team-select">チームを選択：</label>
+            <select id="team-select"></select>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="player-chart"></canvas>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
 
   <script src="app.js"></script>
 </body>
