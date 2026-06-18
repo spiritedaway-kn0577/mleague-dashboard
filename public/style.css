@@ -18,29 +18,127 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+  font-family: 'Noto Sans JP', sans-serif;
   min-height: 100vh;
   font-size: 14px;
 }
 
+/* ===== パスワード画面 ===== */
+#pw-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+#pw-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 28px;
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+#pw-logo {
+  width: 160px;
+  filter: brightness(1.2);
+}
+
+#pw-box h2 {
+  font-size: 1rem;
+  color: var(--gold);
+  font-weight: normal;
+  letter-spacing: 0.08em;
+}
+
+#pw-box p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+#pw-input-wrap {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+#pw-input {
+  flex: 1;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 10px 14px;
+  font-size: 1rem;
+  outline: none;
+}
+
+#pw-input:focus { border-color: var(--green-light); }
+
+#pw-btn {
+  background: var(--green);
+  border: none;
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 1.2rem;
+  padding: 0 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#pw-btn:hover { background: var(--green-light); }
+
+#pw-error {
+  color: var(--red-light) !important;
+  font-size: 0.8rem !important;
+  min-height: 1em;
+}
+
+/* ===== ヘッダー ===== */
 header {
   background: linear-gradient(135deg, var(--green-dark), var(--bg));
   border-bottom: 2px solid var(--green-light);
-  padding: 16px;
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-header h1 {
-  font-size: 1.2rem;
-  color: var(--gold);
-  letter-spacing: 0.04em;
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+#header-logo {
+  height: 26px;
+  width: auto;
+  filter: brightness(1.2);
+  flex-shrink: 0;
+}
+
+#header-title {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap;
 }
 
 #last-updated {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 main {
@@ -52,19 +150,59 @@ main {
   gap: 12px;
 }
 
+/* ===== 折りたたみ ===== */
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 16px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.section-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  gap: 8px;
+  text-align: left;
+}
+
+.section-toggle h2 {
+  font-size: 0.95rem;
+  color: var(--gold);
+  border-left: 3px solid var(--red);
+  padding-left: 10px;
+  margin-bottom: 0;
+}
+
+.toggle-icon {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  transition: transform 0.25s;
+}
+
+.section-body {
+  padding: 0 16px 16px;
+  display: block;
+}
+
+.section-body.collapsed {
+  display: none;
+}
+
+.toggle-icon.collapsed {
+  transform: rotate(180deg);
 }
 
 .card h2 {
   font-size: 0.95rem;
   color: var(--gold);
-  border-left: 3px solid var(--red);
-  padding-left: 10px;
-  margin-bottom: 14px;
 }
 
 /* コントロール */
@@ -142,11 +280,35 @@ select:focus { outline: none; border-color: var(--green-light); }
 
 .team-rank-info { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 
-.team-rank-header {
+.team-players-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 8px;
+  padding: 0;
+  text-align: left;
+  color: inherit;
+}
+
+.team-header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.team-toggle-icon {
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  transition: transform 0.2s;
+}
+
+.team-toggle-icon.open {
+  transform: rotate(180deg);
 }
 
 .team-name-block { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
@@ -164,27 +326,27 @@ select:focus { outline: none; border-color: var(--green-light); }
 .team-score.negative { color: var(--red-light); }
 
 .players-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 6px;
 }
+
+.players-row.collapsed { display: none; }
 
 .player-chip {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 3px 8px 3px 3px;
-  font-size: 0.75rem;
-  min-width: 0;
-  overflow: hidden;
+  border-radius: 20px;
+  padding: 4px 14px 4px 4px;
+  font-size: 0.82rem;
 }
 
 .player-chip img {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   object-fit: cover;
   background: var(--green-dark);
@@ -193,17 +355,15 @@ select:focus { outline: none; border-color: var(--green-light); }
 
 .player-chip .chip-name {
   flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .player-chip .chip-score {
   color: var(--text-muted);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   white-space: nowrap;
-  flex-shrink: 0;
+  text-align: center;
+  min-width: 60px;
 }
 
 .chip-score.positive { color: var(--green-light); }
@@ -211,8 +371,8 @@ select:focus { outline: none; border-color: var(--green-light); }
 
 /* アワード */
 .awards-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -261,8 +421,33 @@ select:focus { outline: none; border-color: var(--green-light); }
 .yakuman-item {
   background: var(--bg-card2);
   border: 1px solid var(--red);
-  border-radius: 8px;
-  padding: 10px 12px;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.yakuman-photo {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--red);
+}
+
+.yakuman-photo--placeholder {
+  background: var(--green-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+.yakuman-info {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -271,12 +456,12 @@ select:focus { outline: none; border-color: var(--green-light); }
 .yakuman-top {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .yakuman-date { font-size: 0.72rem; color: var(--text-muted); }
-.yakuman-player { font-weight: bold; font-size: 0.9rem; }
+.yakuman-player { font-weight: bold; font-size: 0.92rem; }
 .yakuman-yaku {
   background: var(--red);
   color: white;
@@ -284,13 +469,14 @@ select:focus { outline: none; border-color: var(--green-light); }
   padding: 1px 7px;
   font-size: 0.78rem;
 }
-.yakuman-score { margin-left: auto; color: var(--gold); font-weight: bold; font-size: 0.85rem; }
+.yakuman-score { margin-left: auto; color: var(--gold); font-weight: bold; font-size: 0.88rem; white-space: nowrap; }
 
 .yakuman-meta {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .empty-msg { color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 16px; }
@@ -298,11 +484,13 @@ select:focus { outline: none; border-color: var(--green-light); }
 /* PC対応 */
 @media (min-width: 640px) {
   body { font-size: 15px; }
-  header { flex-direction: row; align-items: center; justify-content: space-between; padding: 20px 28px; }
-  header h1 { font-size: 1.4rem; }
+  header { padding: 16px 28px; }
+  #header-logo { height: 32px; }
   main { padding: 20px; gap: 20px; }
-  .card { padding: 20px; }
+  .section-toggle { padding: 18px 20px; }
+  .section-body { padding: 0 20px 20px; }
   .chart-wrap { height: 300px; }
-  .players-row { grid-template-columns: repeat(4, 1fr); }
-  .awards-grid { grid-template-columns: repeat(4, 1fr); }
+  .players-row { flex-direction: row; flex-wrap: wrap; }
+  .player-chip { flex: 0 0 calc(50% - 3px); }
+  .awards-grid { display: grid; grid-template-columns: repeat(2, 1fr); }
 }
