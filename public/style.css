@@ -1,0 +1,268 @@
+:root {
+  --green: #1a6b3a;
+  --green-light: #2d9e57;
+  --green-dark: #0f3d22;
+  --red: #c0392b;
+  --red-light: #e74c3c;
+  --gold: #f0c040;
+  --bg: #0f2018;
+  --bg-card: #162a1e;
+  --bg-card2: #1e3828;
+  --text: #e8f5ee;
+  --text-muted: #7fad8f;
+  --border: #2d5a3a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+  min-height: 100vh;
+}
+
+header {
+  background: linear-gradient(135deg, var(--green-dark), var(--bg));
+  border-bottom: 2px solid var(--green-light);
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+header h1 {
+  font-size: 1.6rem;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+}
+
+#last-updated {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  color: var(--gold);
+  border-left: 4px solid var(--red);
+  padding-left: 12px;
+  margin-bottom: 20px;
+}
+
+/* コントロール */
+.controls {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.controls label { color: var(--text-muted); font-size: 0.9rem; }
+
+select {
+  background: var(--bg-card2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+select:focus { outline: none; border-color: var(--green-light); }
+
+/* グラフ */
+.chart-wrap {
+  position: relative;
+  height: 320px;
+}
+
+/* チームランキング */
+#team-ranking {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.team-rank-item {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.team-rank-item.rank-1 { border-color: #ffd700; }
+.team-rank-item.rank-2 { border-color: #c0c0c0; }
+.team-rank-item.rank-3 { border-color: #cd7f32; }
+
+.rank-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--green-dark);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.rank-1 .rank-badge { background: #7a5c00; border-color: #ffd700; color: #ffd700; }
+.rank-2 .rank-badge { background: #444; border-color: #c0c0c0; color: #c0c0c0; }
+.rank-3 .rank-badge { background: #5c3010; border-color: #cd7f32; color: #cd7f32; }
+
+.team-rank-info { display: flex; flex-direction: column; gap: 10px; }
+
+.team-rank-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.team-name { font-size: 1rem; font-weight: bold; color: var(--text); }
+
+.team-score {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--gold);
+}
+
+.team-score.negative { color: var(--red-light); }
+
+.players-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.player-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px 4px 4px;
+  font-size: 0.8rem;
+}
+
+.player-chip img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--green-dark);
+}
+
+.player-chip .chip-score {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.chip-score.positive { color: var(--green-light); }
+.chip-score.negative { color: var(--red-light); }
+
+/* アワード */
+.awards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.award-block {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.award-block h3 {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.award-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.award-rank {
+  font-size: 0.85rem;
+  width: 20px;
+  color: var(--text-muted);
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.award-rank.r1 { color: #ffd700; }
+.award-rank.r2 { color: #c0c0c0; }
+.award-rank.r3 { color: #cd7f32; }
+
+.award-player { font-size: 0.9rem; flex: 1; }
+.award-team { font-size: 0.75rem; color: var(--text-muted); }
+.award-value { font-size: 0.9rem; font-weight: bold; color: var(--gold); white-space: nowrap; }
+
+/* 役満 */
+#yakuman-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.yakuman-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-card2);
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.yakuman-date { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; }
+.yakuman-player { font-weight: bold; }
+.yakuman-yaku {
+  background: var(--red);
+  color: white;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.85rem;
+}
+.yakuman-score { margin-left: auto; color: var(--gold); font-weight: bold; font-size: 0.9rem; }
+
+.empty-msg { color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 20px; }
+
+@media (max-width: 600px) {
+  header { flex-direction: column; gap: 8px; align-items: flex-start; }
+  header h1 { font-size: 1.2rem; }
+  .awards-grid { grid-template-columns: 1fr 1fr; }
+  .chart-wrap { height: 240px; }
+}

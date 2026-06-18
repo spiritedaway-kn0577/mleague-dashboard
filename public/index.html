@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mリーグ ドラフトダッシュボード</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🀄 Mリーグ ドラフトダッシュボード</h1>
+    <p id="last-updated"></p>
+  </header>
+
+  <main>
+    <!-- セクション1: チーム別選手推移グラフ -->
+    <section class="card">
+      <h2>選手別 累積ポイント推移</h2>
+      <div class="controls">
+        <label for="team-select">チームを選択：</label>
+        <select id="team-select"></select>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="player-chart"></canvas>
+      </div>
+    </section>
+
+    <!-- セクション2: 再ドラフトチーム推移グラフ -->
+    <section class="card">
+      <h2>ドラフトチーム 累積ポイント推移</h2>
+      <div class="chart-wrap">
+        <canvas id="team-chart"></canvas>
+      </div>
+    </section>
+
+    <!-- セクション3: チームランキング -->
+    <section class="card">
+      <h2>ドラフトチーム ランキング</h2>
+      <div id="team-ranking"></div>
+    </section>
+
+    <!-- セクション4: アワード -->
+    <section class="card">
+      <h2>🏆 アワード</h2>
+      <div class="awards-grid">
+        <div class="award-block">
+          <h3>個人スコア（累計）TOP3</h3>
+          <div id="award-total"></div>
+        </div>
+        <div class="award-block">
+          <h3>最高スコア TOP3</h3>
+          <div id="award-best"></div>
+        </div>
+        <div class="award-block">
+          <h3>4着回避率 TOP3</h3>
+          <div id="award-avoid"></div>
+        </div>
+        <div class="award-block">
+          <h3>最多トップ TOP3</h3>
+          <div id="award-top"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- セクション5: 役満賞 -->
+    <section class="card">
+      <h2>🎴 役満賞</h2>
+      <div id="yakuman-list"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
