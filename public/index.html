@@ -14,16 +14,10 @@
   </header>
 
   <main>
-    <!-- セクション1: チーム別選手推移グラフ -->
+    <!-- セクション1: チームランキング -->
     <section class="card">
-      <h2>選手別 累積ポイント推移</h2>
-      <div class="controls">
-        <label for="team-select">チームを選択：</label>
-        <select id="team-select"></select>
-      </div>
-      <div class="chart-wrap">
-        <canvas id="player-chart"></canvas>
-      </div>
+      <h2>ドラフトチーム ランキング</h2>
+      <div id="team-ranking"></div>
     </section>
 
     <!-- セクション2: 再ドラフトチーム推移グラフ -->
@@ -34,13 +28,7 @@
       </div>
     </section>
 
-    <!-- セクション3: チームランキング -->
-    <section class="card">
-      <h2>ドラフトチーム ランキング</h2>
-      <div id="team-ranking"></div>
-    </section>
-
-    <!-- セクション4: アワード -->
+    <!-- セクション3: アワード -->
     <section class="card">
       <h2>🏆 アワード</h2>
       <div class="awards-grid">
@@ -63,10 +51,22 @@
       </div>
     </section>
 
-    <!-- セクション5: 役満賞 -->
+    <!-- セクション4: 役満賞 -->
     <section class="card">
       <h2>🎴 役満賞</h2>
       <div id="yakuman-list"></div>
+    </section>
+
+    <!-- セクション5: チーム別選手推移グラフ -->
+    <section class="card">
+      <h2>選手別 累積ポイント推移</h2>
+      <div class="controls">
+        <label for="team-select">チームを選択：</label>
+        <select id="team-select"></select>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="player-chart"></canvas>
+      </div>
     </section>
   </main>
 
