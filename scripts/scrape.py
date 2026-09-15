@@ -11,6 +11,8 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "data")
 IMAGES_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "images", "players")
 RESULTS_FILE = os.path.join(DATA_DIR, "results.json")
 
+SEASON_START = "2026-09-14"  # 今シーズンの開始日（これ以降のデータのみ保存）
+
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 }
@@ -150,6 +152,8 @@ def scrape_games():
         date_text = date_el.get_text(strip=True) if date_el else ""
         date = parse_date_from_modal(modal_id, date_text)
         if not date:
+            continue
+        if date < SEASON_START:
             continue
 
         # 回戦ごとにカラムを処理
