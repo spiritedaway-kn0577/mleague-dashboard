@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-09-15 13:50:41",
+  "last_updated": "2026-09-17 18:54:43",
   "matches": [
     {
       "date": "2026-09-14",
@@ -118,6 +118,66 @@
           "player": "岡田紗佳",
           "score": -81.8,
           "image": "images/players/岡田紗佳.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-17",
+      "round": 1,
+      "players": [
+        {
+          "rank": 1,
+          "player": "本田朋広",
+          "score": 56.7,
+          "image": "images/players/本田朋広.png"
+        },
+        {
+          "rank": 2,
+          "player": "HIRO柴田",
+          "score": 13.2,
+          "image": "images/players/HIRO柴田.png"
+        },
+        {
+          "rank": 3,
+          "player": "東城りお",
+          "score": -14.1,
+          "image": "images/players/東城りお.png"
+        },
+        {
+          "rank": 4,
+          "player": "渡辺太",
+          "score": -55.8,
+          "image": "images/players/渡辺太.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-17",
+      "round": 2,
+      "players": [
+        {
+          "rank": 1,
+          "player": "石井一馬",
+          "score": 55.6,
+          "image": "images/players/石井一馬.png"
+        },
+        {
+          "rank": 2,
+          "player": "園田賢",
+          "score": 15.5,
+          "image": "images/players/園田賢.png"
+        },
+        {
+          "rank": 3,
+          "player": "鈴木大介",
+          "score": -10.1,
+          "image": "images/players/鈴木大介.png"
+        },
+        {
+          "rank": 4,
+          "player": "萩原聖人",
+          "score": -61.0,
+          "image": "images/players/萩原聖人.png"
         }
       ]
     }
