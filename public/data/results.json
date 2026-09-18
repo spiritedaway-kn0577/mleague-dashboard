@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-09-17 18:54:43",
+  "last_updated": "2026-09-18 18:15:55",
   "matches": [
     {
       "date": "2026-09-14",
@@ -178,6 +178,66 @@
           "player": "萩原聖人",
           "score": -61.0,
           "image": "images/players/萩原聖人.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-18",
+      "round": 1,
+      "players": [
+        {
+          "rank": 1,
+          "player": "黒沢咲",
+          "score": 62.5,
+          "image": "images/players/黒沢咲.png"
+        },
+        {
+          "rank": 2,
+          "player": "尻無濱航",
+          "score": 14.6,
+          "image": "images/players/尻無濱航.png"
+        },
+        {
+          "rank": 3,
+          "player": "瑞原明奈",
+          "score": -26.5,
+          "image": "images/players/瑞原明奈.png"
+        },
+        {
+          "rank": 4,
+          "player": "佐々木寿人",
+          "score": -50.6,
+          "image": "images/players/佐々木寿人.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-18",
+      "round": 2,
+      "players": [
+        {
+          "rank": 1,
+          "player": "堀慎吾",
+          "score": 51.0,
+          "image": "images/players/堀慎吾.png"
+        },
+        {
+          "rank": 2,
+          "player": "鈴木優",
+          "score": 7.7,
+          "image": "images/players/鈴木優.png"
+        },
+        {
+          "rank": 3,
+          "player": "本田朋広",
+          "score": -17.1,
+          "image": "images/players/本田朋広.png"
+        },
+        {
+          "rank": 4,
+          "player": "伊達朱里紗",
+          "score": -41.6,
+          "image": "images/players/伊達朱里紗.png"
         }
       ]
     }
