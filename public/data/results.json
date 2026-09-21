@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-09-18 18:15:55",
+  "last_updated": "2026-09-21 19:56:09",
   "matches": [
     {
       "date": "2026-09-14",
@@ -238,6 +238,66 @@
           "player": "伊達朱里紗",
           "score": -41.6,
           "image": "images/players/伊達朱里紗.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-21",
+      "round": 1,
+      "players": [
+        {
+          "rank": 1,
+          "player": "渡辺太",
+          "score": 67.5,
+          "image": "images/players/渡辺太.png"
+        },
+        {
+          "rank": 2,
+          "player": "白鳥翔",
+          "score": 10.6,
+          "image": "images/players/白鳥翔.png"
+        },
+        {
+          "rank": 3,
+          "player": "阿久津翔太",
+          "score": -15.2,
+          "image": "images/players/阿久津翔太.png"
+        },
+        {
+          "rank": 4,
+          "player": "中田花奈",
+          "score": -62.9,
+          "image": "images/players/中田花奈.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-21",
+      "round": 2,
+      "players": [
+        {
+          "rank": 1,
+          "player": "多井隆晴",
+          "score": 70.9,
+          "image": "images/players/多井隆晴.png"
+        },
+        {
+          "rank": 2,
+          "player": "下石戟",
+          "score": 8.5,
+          "image": "images/players/下石戟.png"
+        },
+        {
+          "rank": 3,
+          "player": "園田賢",
+          "score": -24.7,
+          "image": "images/players/園田賢.png"
+        },
+        {
+          "rank": 4,
+          "player": "堀慎吾",
+          "score": -54.7,
+          "image": "images/players/堀慎吾.png"
         }
       ]
     }
