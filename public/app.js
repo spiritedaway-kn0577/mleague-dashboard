@@ -301,6 +301,40 @@ function renderYakuman(yakumanData, draftTeams, playerStats) {
   }).join('');
 }
 
+// ===== 選手成績表描画 =====
+const STATS_LABELS = [
+  '試合数','総局数','ポイント','平着',
+  '1位','2位','3位','4位',
+  'トップ率','連対率','ラス回避率',
+  'ベストスコア','平均打点',
+  '副露率','リーチ率','アガリ率','放銃率','放銃平均打点'
+];
+
+function renderStatsTable(team, statsData) {
+  const table = document.getElementById('stats-table');
+  const players = team.players;
+  const data = statsData.players ?? {};
+
+  // 選手名を正規化して照合
+  const normalize = n => n.replace(/\s/g, '');
+
+  const header = `<thead><tr>
+    <th class="stats-label-col">項目</th>
+    ${players.map(name => `<th class="stats-player-col">${name}</th>`).join('')}
+  </tr></thead>`;
+
+  const rows = STATS_LABELS.map(label => {
+    const cells = players.map(name => {
+      const pdata = data[normalize(name)] ?? {};
+      const val = pdata[label] ?? '—';
+      return `<td>${val}</td>`;
+    }).join('');
+    return `<tr><th class="stats-label-col">${label}</th>${cells}</tr>`;
+  }).join('');
+
+  table.innerHTML = header + `<tbody>${rows}</tbody>`;
+}
+
 // ===== プレースホルダー画像生成 =====
 function createPlaceholder() {
   const canvas = document.createElement('canvas');
@@ -377,10 +411,11 @@ async function init() {
   await setupPassword();
   setupToggles();
 
-  const [results, draft, yakuman] = await Promise.all([
+  const [results, draft, yakuman, statsData] = await Promise.all([
     loadJSON('/data/results.json'),
     loadJSON('/data/draft.json'),
-    loadJSON('/data/yakuman.json')
+    loadJSON('/data/yakuman.json'),
+    loadJSON('/data/stats.json')
   ]);
 
   const placeholder = createPlaceholder();
@@ -403,6 +438,21 @@ async function init() {
 
   // 役満
   renderYakuman(yakuman, draft.teams, playerStats);
+
+  // 成績表プルダウン
+  const statsSelect = document.getElementById('stats-team-select');
+  draft.teams.forEach((team, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = team.name;
+    statsSelect.appendChild(opt);
+  });
+  const updateStatsTable = () => {
+    const idx = parseInt(statsSelect.value);
+    renderStatsTable(draft.teams[idx], statsData);
+  };
+  statsSelect.addEventListener('change', updateStatsTable);
+  updateStatsTable();
 
   // プルダウン生成（選手推移）
   const select = document.getElementById('team-select');
