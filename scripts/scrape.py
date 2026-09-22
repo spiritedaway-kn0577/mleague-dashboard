@@ -11,7 +11,7 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "data")
 IMAGES_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "images", "players")
 RESULTS_FILE = os.path.join(DATA_DIR, "results.json")
 
-SEASON_START = "2026-09-14"  # 今シーズンの開始日（これ以降のデータのみ保存）
+SEASON_START = "2026-09-15"  # 今シーズンの開始日（これ以降のデータのみ保存）
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
@@ -144,6 +144,9 @@ def scrape_games():
     modals = soup.find_all("div", id=re.compile(r"^js-modal-key\d{8}-\d+$"))
     print(f"試合モーダル数: {len(modals)}")
 
+    # 2卓同時開催対応: 同日の複数モーダルを通し番号で処理
+    date_round_counter = {}
+
     for modal in modals:
         modal_id = modal["id"].replace("js-modal-", "")  # "key20260302-135"
 
@@ -156,9 +159,11 @@ def scrape_games():
         if date < SEASON_START:
             continue
 
-        # 回戦ごとにカラムを処理
+        # 回戦ごとにカラムを処理（同日複数モーダルは通し番号）
         columns = modal.find_all(class_="p-gamesResult__column")
-        for round_num, col in enumerate(columns, start=1):
+        for col in columns:
+            date_round_counter[date] = date_round_counter.get(date, 0) + 1
+            round_num = date_round_counter[date]
             key = f"{date}-{round_num}"
             if key in existing_keys:
                 continue
