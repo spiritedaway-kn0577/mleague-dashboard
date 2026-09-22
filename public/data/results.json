@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-09-21 19:56:09",
+  "last_updated": "2026-09-22 15:57:45",
   "matches": [
     {
       "date": "2026-09-14",
@@ -298,6 +298,66 @@
           "player": "堀慎吾",
           "score": -54.7,
           "image": "images/players/堀慎吾.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-22",
+      "round": 1,
+      "players": [
+        {
+          "rank": 1,
+          "player": "岡田紗佳",
+          "score": 60.8,
+          "image": "images/players/岡田紗佳.png"
+        },
+        {
+          "rank": 2,
+          "player": "内川幸太郎",
+          "score": 14.1,
+          "image": "images/players/内川幸太郎.png"
+        },
+        {
+          "rank": 3,
+          "player": "日向藍子",
+          "score": -27.0,
+          "image": "images/players/日向藍子.png"
+        },
+        {
+          "rank": 4,
+          "player": "萩原聖人",
+          "score": -47.9,
+          "image": "images/players/萩原聖人.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-22",
+      "round": 2,
+      "players": [
+        {
+          "rank": 1,
+          "player": "松本吉弘",
+          "score": 78.2,
+          "image": "images/players/松本吉弘.png"
+        },
+        {
+          "rank": 2,
+          "player": "勝又健志",
+          "score": 2.8,
+          "image": "images/players/勝又健志.png"
+        },
+        {
+          "rank": 3,
+          "player": "阿久津翔太",
+          "score": -24.8,
+          "image": "images/players/阿久津翔太.png"
+        },
+        {
+          "rank": 4,
+          "player": "黒沢咲",
+          "score": -56.2,
+          "image": "images/players/黒沢咲.png"
         }
       ]
     }
