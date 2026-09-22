@@ -12,6 +12,8 @@ IMAGES_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "images", "
 RESULTS_FILE = os.path.join(DATA_DIR, "results.json")
 
 SEASON_START = "2026-09-15"  # 今シーズンの開始日（これ以降のデータのみ保存）
+STATS_URL = f"{BASE_URL}/stats/"
+STATS_FILE = os.path.join(DATA_DIR, "stats.json")
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
@@ -185,7 +187,65 @@ def scrape_games():
     return new_count
 
 
+def parse_stat_value(text):
+    text = text.strip()
+    try:
+        return float(text)
+    except ValueError:
+        return text
+
+
+def scrape_stats():
+    print(f"成績表スクレイピング開始: {STATS_URL}")
+    resp = requests.get(STATS_URL, headers=HEADERS, timeout=30)
+    resp.encoding = "utf-8"
+    soup = BeautifulSoup(resp.text, "html.parser")
+
+    players = {}
+
+    for team_el in soup.find_all(class_="p-stats__team"):
+        team_name_el = team_el.find(class_="p-stats__teamName")
+        table = team_el.find(class_="p-stats__table")
+        if not team_name_el or not table:
+            continue
+
+        rows = table.find_all("tr")
+        if not rows:
+            continue
+
+        # 1行目: 選手名
+        header_row = rows[0]
+        player_names = [th.get_text(strip=True) for th in header_row.find_all("th", scope="col")]
+        # スペース除去して正規化（"石井 一馬" → "石井一馬"）
+        normalized_names = [n.replace(" ", "").replace("　", "") for n in player_names]
+
+        # 選手ごとに辞書初期化
+        for name in normalized_names:
+            if name and name not in players:
+                players[name] = {}
+
+        # 2行目以降: 各統計
+        for row in rows[1:]:
+            label_el = row.find("th", scope="row")
+            if not label_el:
+                continue
+            label = label_el.get_text(strip=True)
+            cells = row.find_all("td")
+            for i, cell in enumerate(cells):
+                if i < len(normalized_names) and normalized_names[i]:
+                    players[normalized_names[i]][label] = parse_stat_value(cell.get_text(strip=True))
+
+    data = {
+        "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "players": players
+    }
+    with open(STATS_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    print(f"成績表保存完了: {len(players)}選手")
+
+
 if __name__ == "__main__":
     os.makedirs(IMAGES_DIR, exist_ok=True)
     os.makedirs(DATA_DIR, exist_ok=True)
     scrape_games()
+    scrape_stats()
