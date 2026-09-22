@@ -15,6 +15,9 @@
   <!-- パスワード画面 -->
   <div id="pw-overlay">
     <div id="pw-box">
+      <div id="pw-banner-wrap">
+        <img src="images/season-banner.jpg" alt="M.LEAGUE 2026-27" id="pw-banner">
+      </div>
       <img src="images/mleague-logo.svg" alt="M.LEAGUE" id="pw-logo">
       <h2>ドラフトダッシュボード</h2>
       <p>パスワードを入力してください</p>
@@ -112,6 +115,23 @@
           </div>
           <div class="chart-wrap">
             <canvas id="player-chart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- セクション6: 選手成績表 -->
+      <section class="card">
+        <button class="section-toggle" data-target="stats-body">
+          <h2>📊 選手成績表</h2>
+          <span class="toggle-icon">▲</span>
+        </button>
+        <div id="stats-body" class="section-body">
+          <div class="controls">
+            <label for="stats-team-select">チームを選択：</label>
+            <select id="stats-team-select"></select>
+          </div>
+          <div class="stats-table-wrap">
+            <table id="stats-table" class="stats-table"></table>
           </div>
         </div>
       </section>
