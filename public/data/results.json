@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-10-15 18:59:39",
+  "last_updated": "2026-10-16 18:43:36",
   "matches": [
     {
       "date": "2026-09-14",
@@ -2038,6 +2038,126 @@
           "player": "白鳥翔",
           "score": -65.7,
           "image": "images/players/白鳥翔.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "round": 1,
+      "players": [
+        {
+          "rank": 1,
+          "player": "瀬戸熊直樹",
+          "score": 78.3,
+          "image": "images/players/瀬戸熊直樹.png"
+        },
+        {
+          "rank": 2,
+          "player": "竹内元太",
+          "score": 33.5,
+          "image": "images/players/竹内元太.png"
+        },
+        {
+          "rank": 3,
+          "player": "鈴木大介",
+          "score": -37.0,
+          "image": "images/players/鈴木大介.png"
+        },
+        {
+          "rank": 4,
+          "player": "日向藍子",
+          "score": -74.8,
+          "image": "images/players/日向藍子.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "round": 2,
+      "players": [
+        {
+          "rank": 1,
+          "player": "本田朋広",
+          "score": 69.5,
+          "image": "images/players/本田朋広.png"
+        },
+        {
+          "rank": 2,
+          "player": "醍醐大",
+          "score": 2.5,
+          "image": "images/players/醍醐大.png"
+        },
+        {
+          "rank": 3,
+          "player": "松本吉弘",
+          "score": -20.5,
+          "image": "images/players/松本吉弘.png"
+        },
+        {
+          "rank": 4,
+          "player": "下石戟",
+          "score": -51.5,
+          "image": "images/players/下石戟.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "round": 3,
+      "players": [
+        {
+          "rank": 1,
+          "player": "尻無濱航",
+          "score": 79.1,
+          "image": "images/players/尻無濱航.png"
+        },
+        {
+          "rank": 2,
+          "player": "朝倉康心",
+          "score": 15.1,
+          "image": "images/players/朝倉康心.png"
+        },
+        {
+          "rank": 3,
+          "player": "三浦智博",
+          "score": -26.0,
+          "image": "images/players/三浦智博.png"
+        },
+        {
+          "rank": 4,
+          "player": "浅見真紀",
+          "score": -68.2,
+          "image": "images/players/浅見真紀.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "round": 4,
+      "players": [
+        {
+          "rank": 1,
+          "player": "渡辺太",
+          "score": 60.2,
+          "image": "images/players/渡辺太.png"
+        },
+        {
+          "rank": 2,
+          "player": "阿久津翔太",
+          "score": 1.8,
+          "image": "images/players/阿久津翔太.png"
+        },
+        {
+          "rank": 3,
+          "player": "HIRO柴田",
+          "score": -19.6,
+          "image": "images/players/HIRO柴田.png"
+        },
+        {
+          "rank": 4,
+          "player": "鈴木優",
+          "score": -42.4,
+          "image": "images/players/鈴木優.png"
         }
       ]
     }
