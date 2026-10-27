@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-10-26 20:23:34",
+  "last_updated": "2026-10-27 19:58:51",
   "matches": [
     {
       "date": "2026-09-14",
@@ -2758,6 +2758,126 @@
           "player": "下石戟",
           "score": -45.0,
           "image": "images/players/下石戟.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "round": 1,
+      "players": [
+        {
+          "rank": 1,
+          "player": "醍醐大",
+          "score": 67.5,
+          "image": "images/players/醍醐大.png"
+        },
+        {
+          "rank": 2,
+          "player": "岡田紗佳",
+          "score": 4.7,
+          "image": "images/players/岡田紗佳.png"
+        },
+        {
+          "rank": 3,
+          "player": "黒沢咲",
+          "score": -25.0,
+          "image": "images/players/黒沢咲.png"
+        },
+        {
+          "rank": 4,
+          "player": "永井孝典",
+          "score": -47.2,
+          "image": "images/players/永井孝典.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "round": 2,
+      "players": [
+        {
+          "rank": 1,
+          "player": "本田朋広",
+          "score": 54.1,
+          "image": "images/players/本田朋広.png"
+        },
+        {
+          "rank": 2,
+          "player": "阿久津翔太",
+          "score": 10.3,
+          "image": "images/players/阿久津翔太.png"
+        },
+        {
+          "rank": 3,
+          "player": "二階堂亜樹",
+          "score": -15.4,
+          "image": "images/players/二階堂亜樹.png"
+        },
+        {
+          "rank": 4,
+          "player": "茅森早香",
+          "score": -49.0,
+          "image": "images/players/茅森早香.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "round": 3,
+      "players": [
+        {
+          "rank": 1,
+          "player": "HIRO柴田",
+          "score": 53.8,
+          "image": "images/players/HIRO柴田.png"
+        },
+        {
+          "rank": 2,
+          "player": "東城りお",
+          "score": 8.3,
+          "image": "images/players/東城りお.png"
+        },
+        {
+          "rank": 3,
+          "player": "浅見真紀",
+          "score": -16.6,
+          "image": "images/players/浅見真紀.png"
+        },
+        {
+          "rank": 4,
+          "player": "高宮まり",
+          "score": -45.5,
+          "image": "images/players/高宮まり.png"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-27",
+      "round": 4,
+      "players": [
+        {
+          "rank": 1,
+          "player": "逢川恵夢",
+          "score": 49.7,
+          "image": "images/players/逢川恵夢.png"
+        },
+        {
+          "rank": 2,
+          "player": "伊達朱里紗",
+          "score": 8.3,
+          "image": "images/players/伊達朱里紗.png"
+        },
+        {
+          "rank": 3,
+          "player": "園田賢",
+          "score": -17.1,
+          "image": "images/players/園田賢.png"
+        },
+        {
+          "rank": 4,
+          "player": "中田花奈",
+          "score": -40.9,
+          "image": "images/players/中田花奈.png"
         }
       ]
     }
