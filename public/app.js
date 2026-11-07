@@ -310,12 +310,28 @@ const STATS_LABELS = [
   '副露率','リーチ率','アガリ率','放銃率','放銃平均打点'
 ];
 
+// 率（小数で返ってくる）→ %表示にする項目
+const STATS_PERCENT_LABELS = new Set([
+  'トップ率','連対率','ラス回避率','副露率','リーチ率','アガリ率','放銃率'
+]);
+
+// 整数で表示する項目
+const STATS_INT_LABELS = new Set([
+  '試合数','総局数','1位','2位','3位','4位','ベストスコア','平均打点','放銃平均打点'
+]);
+
+function formatStatValue(label, val) {
+  if (typeof val !== 'number') return val;
+  if (STATS_PERCENT_LABELS.has(label)) return (val * 100).toFixed(2) + '%';
+  if (STATS_INT_LABELS.has(label)) return Math.round(val).toLocaleString();
+  return val.toLocaleString('ja-JP', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 function renderStatsTable(team, statsData) {
   const table = document.getElementById('stats-table');
   const players = team.players;
   const data = statsData.players ?? {};
 
-  // 選手名を正規化して照合
   const normalize = n => n.replace(/\s/g, '');
 
   const header = `<thead><tr>
@@ -326,8 +342,9 @@ function renderStatsTable(team, statsData) {
   const rows = STATS_LABELS.map(label => {
     const cells = players.map(name => {
       const pdata = data[normalize(name)] ?? {};
-      const val = pdata[label] ?? '—';
-      return `<td>${val}</td>`;
+      const raw = pdata[label];
+      const display = raw === undefined ? '—' : formatStatValue(label, raw);
+      return `<td>${display}</td>`;
     }).join('');
     return `<tr><th class="stats-label-col">${label}</th>${cells}</tr>`;
   }).join('');
