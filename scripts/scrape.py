@@ -210,44 +210,25 @@ def parse_stat_value(text):
 
 
 def scrape_stats():
-    print(f"成績表スクレイピング開始: {STATS_URL}")
-    resp = requests.get(STATS_URL, headers=HEADERS, timeout=30)
-    resp.encoding = "utf-8"
-    soup = BeautifulSoup(resp.text, "html.parser")
+    stats_api_url = f"{BASE_URL}/api/mleague/data?kind=stats"
+    print(f"成績表APIスクレイピング開始: {stats_api_url}")
+    resp = requests.get(stats_api_url, headers=HEADERS, timeout=30)
+    api_data = resp.json()
 
     players = {}
 
-    for team_el in soup.find_all(class_="p-stats__team"):
-        team_name_el = team_el.find(class_="p-stats__teamName")
-        table = team_el.find(class_="p-stats__table")
-        if not team_name_el or not table:
-            continue
+    for team in api_data.get("stats", {}).get("teams", []):
+        player_names = team.get("players", [])
+        metrics = team.get("metrics", [])
 
-        rows = table.find_all("tr")
-        if not rows:
-            continue
-
-        # 1行目: 選手名
-        header_row = rows[0]
-        player_names = [th.get_text(strip=True) for th in header_row.find_all("th", scope="col")]
-        # スペース除去して正規化（"石井 一馬" → "石井一馬"）
-        normalized_names = [n.replace(" ", "").replace("　", "") for n in player_names]
-
-        # 選手ごとに辞書初期化
-        for name in normalized_names:
-            if name and name not in players:
+        for i, raw_name in enumerate(player_names):
+            name = raw_name.replace(" ", "").replace("　", "")
+            if name not in players:
                 players[name] = {}
-
-        # 2行目以降: 各統計
-        for row in rows[1:]:
-            label_el = row.find("th", scope="row")
-            if not label_el:
-                continue
-            label = label_el.get_text(strip=True)
-            cells = row.find_all("td")
-            for i, cell in enumerate(cells):
-                if i < len(normalized_names) and normalized_names[i]:
-                    players[normalized_names[i]][label] = parse_stat_value(cell.get_text(strip=True))
+            for metric in metrics:
+                values = metric.get("values", [])
+                if i < len(values):
+                    players[name][metric["name"]] = values[i]
 
     data = {
         "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
