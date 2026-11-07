@@ -3,10 +3,10 @@ from bs4 import BeautifulSoup
 import json
 import os
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 
 BASE_URL = "https://m-league.jp"
-GAMES_URL = f"{BASE_URL}/games"
+API_URL = f"{BASE_URL}/api/mleague/data?kind=games"
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "data")
 IMAGES_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "images", "players")
 RESULTS_FILE = os.path.join(DATA_DIR, "results.json")
@@ -132,50 +132,64 @@ def parse_column(column_el, date, round_num):
 
 
 def scrape_games():
-    print(f"スクレイピング開始: {GAMES_URL}")
-    resp = requests.get(GAMES_URL, headers=HEADERS, timeout=30)
-    resp.encoding = "utf-8"
-    soup = BeautifulSoup(resp.text, "html.parser")
+    print(f"APIスクレイピング開始: {API_URL}")
+    resp = requests.get(API_URL, headers=HEADERS, timeout=30)
+    api_data = resp.json()
+
+    games = api_data.get("games", [])
+    print(f"取得試合数（API）: {len(games)}")
 
     results = load_results()
     existing_keys = {f"{m['date']}-{m['round']}" for m in results["matches"]}
 
+    # 同日の試合に通し番号を振る
+    date_round_counter = {}
     new_count = 0
 
-    # js-modal-key{YYYYMMDD}-{ID} のdivを全て取得
-    modals = soup.find_all("div", id=re.compile(r"^js-modal-key\d{8}-\d+$"))
-    print(f"試合モーダル数: {len(modals)}")
-
-    # 2卓同時開催対応: 同日の複数モーダルを通し番号で処理
-    date_round_counter = {}
-
-    for modal in modals:
-        modal_id = modal["id"].replace("js-modal-", "")  # "key20260302-135"
-
-        # 日付取得
-        date_el = modal.find(class_="p-gamesResult__date")
-        date_text = date_el.get_text(strip=True) if date_el else ""
-        date = parse_date_from_modal(modal_id, date_text)
-        if not date:
+    for game in games:
+        if not game.get("complete"):
             continue
+
+        # UTC→JST日付
+        date_str = game["date"][:10]  # "2026-09-13T15:00:00.000Z" → "2026-09-13"
+        # UTCの15:00以降はJSTで翌日になるため+1日
+        from datetime import timedelta
+        dt_utc = datetime.fromisoformat(game["date"].replace("Z", "+00:00"))
+        dt_jst = dt_utc + timedelta(hours=9)
+        date = dt_jst.strftime("%Y-%m-%d")
+
         if date < SEASON_START:
             continue
 
-        # 回戦ごとにカラムを処理（同日複数モーダルは通し番号）
-        columns = modal.find_all(class_="p-gamesResult__column")
-        for col in columns:
-            date_round_counter[date] = date_round_counter.get(date, 0) + 1
-            round_num = date_round_counter[date]
-            key = f"{date}-{round_num}"
-            if key in existing_keys:
-                continue
+        date_round_counter[date] = date_round_counter.get(date, 0) + 1
+        round_num = date_round_counter[date]
+        key = f"{date}-{round_num}"
+        if key in existing_keys:
+            continue
 
-            match_data = parse_column(col, date, round_num)
-            if match_data:
-                results["matches"].append(match_data)
-                existing_keys.add(key)
-                new_count += 1
-                print(f"  追加: {date} 第{round_num}回戦 {[p['player'] for p in match_data['players']]}")
+        players = []
+        for p in game.get("players", []):
+            name = p.get("name", "").replace(" ", "").replace("　", "")
+            img_src = p.get("image")
+            image_path = download_player_image(name, img_src) if name else None
+            players.append({
+                "rank": p.get("rank", 0),
+                "player": name,
+                "score": float(p.get("point", 0)),
+                "image": image_path
+            })
+
+        if len(players) < 4:
+            continue
+
+        results["matches"].append({
+            "date": date,
+            "round": round_num,
+            "players": players
+        })
+        existing_keys.add(key)
+        new_count += 1
+        print(f"  追加: {date} 第{round_num}回戦 {[p['player'] for p in players]}")
 
     if new_count > 0:
         results["matches"].sort(key=lambda m: (m["date"], m["round"]))
